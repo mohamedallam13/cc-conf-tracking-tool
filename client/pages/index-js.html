@@ -67,14 +67,14 @@
             contentHtml += `<p><a href="${data.link}" target="_blank">View Post</a></p>`;
         }
 
-    // For each status, we create a date badge
-    data.status.forEach(status => {
-        let statusHtml = `<div class="status ${status.status}">${status.status.toUpperCase()} <span class="date-badge">${new Date(status.timestamp).toLocaleString()}</span></div>`;
-        if (status.status.toLowerCase() === 'rejected' && status.rejectionReasons) {
-            statusHtml += `<p>${status.rejectionReasons}</p>`;
-        }
-        container.innerHTML += statusHtml;
-    });
+        // For each status, we create a date badge
+        data.status.forEach(status => {
+            let statusHtml = `<div class="status ${status.status}">${status.status.toUpperCase()} <span class="date-badge">${new Date(status.timestamp).toLocaleString()}</span></div>`;
+            if (status.status.toLowerCase() === 'rejected' && status.rejectionReasons) {
+                statusHtml += `<p>${status.rejectionReasons}</p>`;
+            }
+            container.innerHTML += statusHtml;
+        });
 
         // Display all confessions and their submission timestamps
         contentHtml += '<p><strong>Submission Attempts:</strong></p>';
@@ -85,10 +85,30 @@
         contentHtml += '</ul>';
 
         // Action buttons
-        contentHtml += `
-        <button onclick="cancelConfession('${serialNum}')" class="action-btn cancel-btn">Cancel My Confession</button>
-        <button onclick="resetStatus('${serialNum}')" class="action-btn reset-btn">Reset Status</button>
-    `;
+        if (latestStatus == "pending") contentHtml += `
+        <button onclick="cancelConfession('${serialNum}')" 
+        class="action-btn cancel-btn 
+        ${latestStatus !== "pending" ? "disabled" : ""}"
+        ${latestStatus !== "pending" ? "disabled= true" : ""}
+        ${latestStatus !== "pending" ? "title= 'Confession cannot be canceled unless it's pending.'" : ""}
+        >
+        Cancel My Confession
+        </button>
+        `;
+        if (latestStatus == "pending") contentHtml += `<button onclick="resetStatus('${serialNum}')" class="action-btn reset-btn">Reset Status</button>`
+        // const cancelButton = document.querySelector('.cancel-btn');
+        // console.log(cancelButton)
+        // if (data.status[0].status.toLowerCase() !== 'pending') {
+        //     // Disable cancel button and add a tooltip if status is not pending
+        //     cancelButton.disabled = true;
+        //     cancelButton.title = "Confession cannot be canceled unless it's pending.";
+        //     cancelButton.classList.add('disabled'); // Use this class to style the disabled button
+        // } else {
+        //     // Ensure button is enabled if status is pending
+        //     cancelButton.disabled = false;
+        //     cancelButton.title = ""; // Remove the tooltip message
+        //     cancelButton.classList.remove('disabled');
+        // }
 
         container.innerHTML = contentHtml;
     }
@@ -113,6 +133,13 @@
         }
     });
 
+    document.querySelector('.cancel-btn').addEventListener('click', function (e) {
+        if (this.disabled) {
+            // For demonstration, using an alert; you might want to use a custom modal for a better UX
+            alert(this.title);
+            e.preventDefault(); // Prevent default button action
+        }
+    });
 
     // function cancelConfession() {
     //     if (confirm("Are you sure you want to cancel your confession?")) {

@@ -65,9 +65,22 @@
         color: white;
     }
 
-    .cancel-btn:hover {
+    /* Style for disabled cancel button */
+    .cancel-btn.disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+        pointer-events: none; /* Prevents hover styles and clicks */
+    }
+
+    /* .cancel-btn:hover {
         background-color: #e63939;
-        /* Slightly darker on hover */
+        /* Slightly darker on hover
+    } */
+
+    /* Ensuring hover styles don't apply to disabled buttons */
+    .cancel-btn:not(:disabled):hover {
+        background-color: #e63939;
+        /* Slightly darker on hover, only for enabled buttons */
     }
 
     .reset-btn {
