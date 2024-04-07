@@ -24,8 +24,15 @@
 
     document.getElementById('submitBtn').addEventListener('click', function () {
         const refNum = document.getElementById('refNumInput').value.toUpperCase();
+        const errorMessage = document.getElementById('errorMessage');
+        errorMessage.style.display = 'none';
+        const container = document.getElementById('resultsContainer');
+        container.innerHTML = ''; // Clear previous results
+
         if (!/^[A-Z0-9]{8}$/.test(refNum)) {
-            alert("Invalid Ref Number. Please follow the format: 8 characters, uppercase letters and numbers only.");
+            errorMessage.textContent = 'Invalid Ref Number. Please follow the format: 8 characters, uppercase letters and numbers only.';
+            errorMessage.style.display = 'block'; // Show the error message
+            // refNumInput.value = ''; // Optionally clear the input field
             return;
         }
         const serialNum = trackingFile.index[refNum];
@@ -33,16 +40,31 @@
             document.getElementById('resultsContainer').textContent = 'No data found for this Ref Number.';
             return;
         }
-        const data = trackingFile.data[serialNum];
+        const data = trackingFile.data[serialNum.toString()];
+        // const data = trackingFile.data[serialNum];
         if (data) {
-            displayResults(data);
+            displayResults(serialNum.toString(), data);
         } else {
-            document.getElementById('resultsContainer').textContent = 'No submissions found for this Ref Number.';
+            document.getElementById('resultsContainer').textContent = 'No submissions found for this Ref Number.'; // Updated to pass serialNum to the display function
         }
     });
 
+    document.getElementById('refNumInput').addEventListener('keydown', function (event) {
+        if (event.key === "Enter" || event.keyCode === 13) {
+            event.preventDefault(); // Prevent the default action to avoid submitting the form
+            submitFunction(); // Call the function that handles submission
+        }
+    });
+
+    function submitFunction() {
+        // This is where you handle what happens when the user presses Enter.
+        // For demonstration, we'll simulate clicking the submit button.
+        document.getElementById('submitBtn').click();
+    }
+
     function displayResults(serialNum, data) {
         const container = document.getElementById('resultsContainer');
+
         container.innerHTML = ''; // Clear previous results
 
         if (!data) {
@@ -51,12 +73,12 @@
         }
 
         // Highlight the serial number
-        let contentHtml = `<p><strong>Serial Number:</strong> <span class="highlight">${serialNum}</span></p>`;
+        let contentHtml = `<p><strong>Serial Number:</strong> <span class="highlight" id="serialNum">${serialNum}</span></p>`;
 
         // Display the latest status with its timestamp and other details if available
-        const latestStatus = data.status[0];
+        const latestStatus = data.status[0] || { status: "pending" };
         contentHtml += `<div class="status ${latestStatus.status}">${latestStatus.status.toUpperCase()}</div>`;
-        contentHtml += `<p><span class="date-badge">${new Date(latestStatus.timestamp).toLocaleString()}</span></p>`;
+        if (latestStatus.timestamp) contentHtml += `<p><span class="date-badge">${new Date(latestStatus.timestamp).toLocaleString()}</span></p>`;
 
         if (latestStatus.status === 'rejected' && latestStatus.rejectionReasons) {
             contentHtml += `<p><strong>Rejection Reason:</strong> ${latestStatus.rejectionReasons}</p>`;
@@ -64,7 +86,7 @@
 
         // Display the link if the confession is posted
         if (data.link && latestStatus.status === 'posted') {
-            contentHtml += `<p><a href="${data.link}" target="_blank">View Post</a></p>`;
+            contentHtml += `<p><a href="${data.link}" target="_blank">View Post on Facebook</a></p>`;
         }
 
         // For each status, we create a date badge
@@ -85,53 +107,22 @@
         contentHtml += '</ul>';
 
         // Action buttons
-        if (latestStatus == "pending") contentHtml += `
+        if (latestStatus.status == "pending") contentHtml += `
         <button onclick="cancelConfession('${serialNum}')" 
         class="action-btn cancel-btn 
-        ${latestStatus !== "pending" ? "disabled" : ""}"
-        ${latestStatus !== "pending" ? "disabled= true" : ""}
-        ${latestStatus !== "pending" ? "title= 'Confession cannot be canceled unless it's pending.'" : ""}
+        ${latestStatus.status !== "pending" ? "disabled" : ""}"
+        ${latestStatus.status !== "pending" ? "disabled= true" : ""}
+        ${latestStatus.status !== "pending" ? "title= 'Confession cannot be canceled unless it's pending.'" : ""}
         >
         Cancel My Confession
         </button>
         `;
-        if (latestStatus == "pending") contentHtml += `<button onclick="resetStatus('${serialNum}')" class="action-btn reset-btn">Reset Status</button>`
-        // const cancelButton = document.querySelector('.cancel-btn');
-        // console.log(cancelButton)
-        // if (data.status[0].status.toLowerCase() !== 'pending') {
-        //     // Disable cancel button and add a tooltip if status is not pending
-        //     cancelButton.disabled = true;
-        //     cancelButton.title = "Confession cannot be canceled unless it's pending.";
-        //     cancelButton.classList.add('disabled'); // Use this class to style the disabled button
-        // } else {
-        //     // Ensure button is enabled if status is pending
-        //     cancelButton.disabled = false;
-        //     cancelButton.title = ""; // Remove the tooltip message
-        //     cancelButton.classList.remove('disabled');
-        // }
+        if (latestStatus.status == "pending") contentHtml += `<button onclick="resetStatus('${serialNum}')" class="action-btn reset-btn">Reset Status</button>`
 
         container.innerHTML = contentHtml;
     }
 
-    document.getElementById('submitBtn').addEventListener('click', function () {
-        const refNum = document.getElementById('refNumInput').value.toUpperCase();
-        if (!/^[A-Z0-9]{8}$/.test(refNum)) {
-            alert("Invalid Ref Number. Please follow the format: 8 characters, uppercase letters and numbers only.");
-            return;
-        }
-        const serialNum = trackingFile.index[refNum];
-        if (!serialNum) {
-            document.getElementById('resultsContainer').textContent = 'No data found for this Ref Number.';
-            return;
-        }
-        const data = trackingFile.data[serialNum.toString()];
-        // const data = trackingFile.data[serialNum];
-        if (data) {
-            displayResults(serialNum.toString(), data);
-        } else {
-            document.getElementById('resultsContainer').textContent = 'No submissions found for this Ref Number.'; // Updated to pass serialNum to the display function
-        }
-    });
+
 
     document.querySelector('.cancel-btn').addEventListener('click', function (e) {
         if (this.disabled) {

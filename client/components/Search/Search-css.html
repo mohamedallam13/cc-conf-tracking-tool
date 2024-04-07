@@ -32,6 +32,15 @@
         /* Slightly larger font for better readability */
     }
 
+    .error-message {
+        color: #d9534f;
+        /* Bootstrap 'danger' color for errors */
+        margin-top: 10px;
+        text-align: center;
+        display: none;
+        /* Hide by default */
+    }
+
     button {
         padding: 12px 25px;
         border-radius: 8px;
@@ -69,7 +78,8 @@
     .cancel-btn.disabled {
         background-color: #ccc;
         cursor: not-allowed;
-        pointer-events: none; /* Prevents hover styles and clicks */
+        pointer-events: none;
+        /* Prevents hover styles and clicks */
     }
 
     /* .cancel-btn:hover {
@@ -123,6 +133,16 @@
     .scheduled {
         background-color: rgba(30, 136, 229, 0.5);
         /* Softer blue with some transparency */
+    }
+
+    .canceled {
+        background-color: rgba(108, 117, 125, 0.5);
+        /* Soft grey, indicating cancellation */
+        color: white;
+        padding: 6px 12px;
+        border-radius: 8px;
+        display: inline-block;
+        margin-bottom: 10px;
     }
 
     .date-badge {

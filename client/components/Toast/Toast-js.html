@@ -1,0 +1,19 @@
+<script>
+
+    function showToast(text) {
+        const toastsContainer = document.getElementById("toastsContainer");
+        const toast = document.createElement('div');
+        toast.classList.add('toast');
+        toast.classList.add('toast-slide-in');
+        toastsContainer.appendChild(toast)
+        if (text) toast.innerHTML = text
+        setTimeout(function () {
+            toast.classList.remove('toast-slide-in');
+            toast.classList.add('toast-slide-out');
+            toast.addEventListener('animationend', () => {
+                toast.remove();
+            });
+        }, 5000);
+    }
+
+</script>

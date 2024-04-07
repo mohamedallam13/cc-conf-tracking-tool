@@ -1,7 +1,6 @@
 <script>
     // When the user clicks the cancel button, open the modal 
     function cancelConfession() {
-        
         document.getElementById('cancelModal').style.display = 'flex';
     }
 
@@ -13,6 +12,10 @@
     // When the user clicks "Yes, Cancel It", perform the cancel action
     document.getElementById('confirmCancel').onclick = function () {
         // Perform the cancel action here. Replace console.log with your function
+        const statusUpdated = updateStatus("canceled")
+        if (!statusUpdated) return
+        // Add any additional reject logic here
+        updateDB("canceled")
         console.log("Confession cancelled.");
         document.getElementById('cancelModal').style.display = 'none';
         // Add additional logic as needed
@@ -29,6 +32,62 @@
     // When the user clicks "No, Go Back", close the modal
     document.getElementById('closeModal').onclick = function () {
         document.getElementById('cancelModal').style.display = 'none';
+    }
+
+    function updateStatus(status) {
+        const statusTextElement = document.querySelector('.status');
+        const currentStatus = statusTextElement.innerHTML.toLowerCase()
+        if (currentStatus !== "pending") {
+            showToast("Can not be canceled!")
+            return
+        }
+
+        statusTextElement.innerHTML = status.toUpperCase();
+        statusTextElement.className = 'status'; // Reset classes
+        statusTextElement.classList.add(status.toLowerCase()); // Add the proper class
+        return true
+    }
+
+    function updateDB(status) {
+        const serialNum = document.getElementById('serialNum').innerHTML;
+        console.log("Processing..")
+        const { confirmChange, handleDBError } = toastWithSpinnerOn(serialNum)
+        google.script.run
+            .withSuccessHandler(confirmChange)
+            .withFailureHandler(handleDBError)
+            .updateDB({ serialNum }, status);
+    }
+
+    function toastWithSpinnerOn(serialNum) {
+        const spinnerToastElement = document.createElement('div');
+        spinnerToastElement.classList.add('toast');
+        spinnerToastElement.classList.add('toast-slide-in');
+        spinnerToastElement.id = `toast-${serialNum}`
+        spinnerToastElement.style.display = "none"
+        spinnerToastElement.innerHTML = `<div class="toastSpinner"></div>Processing..`
+        document.getElementById('toastsContainer').appendChild(spinnerToastElement)
+        spinnerToastElement.style.display = 'flex'
+        return {
+            confirmChange: function (success) {
+                // console.log(JSON.parse(success))
+                console.log("Done")
+                toastWithSpinnerOff(spinnerToastElement)
+                showToast("Done!")
+            },
+            handleDBError: function (error) {
+                toastWithSpinnerOff(spinnerToastElement)
+                console.error('Error updating DB:', error);
+                showToast("An error occured!")
+            }
+        }
+    }
+
+    function toastWithSpinnerOff(element) {
+        element.classList.remove('toast-slide-in');
+        element.classList.add('toast-slide-out');
+        element.addEventListener('animationend', () => {
+            element.remove();
+        });
     }
 
 </script>
