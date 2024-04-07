@@ -1,62 +1,30 @@
 <style>
   body {
+    background-color: #eef1f5;
+    font-family: 'Roboto', sans-serif;
+    /* Apply Roboto font */
+    margin: 0;
+    padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f0f2f5;
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
-  .tracker-card {
-    background: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    border-radius: 8px;
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
-  }
-
-  .card-title {
-    margin: 0 0 20px 0;
-    color: #333;
-  }
-
-  .tracker-input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+  /* Apply a natural box layout model to all elements */
+  *,
+  *::before,
+  *::after {
     box-sizing: border-box;
   }
 
-  .tracker-button {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
-  }
-
-  .tracker-button:hover {
-    background-color: #0056b3;
-  }
-
-  .confession-display {
-    margin-top: 20px;
-    background-color: #e9ecef;
-    border-left: 4px solid #007bff;
-    padding: 10px;
-    border-radius: 5px;
-    display: none;
-    /* Initially hidden */
-    text-align: left;
+  /* Ensures that the body does not have a fixed height on smaller screens,
+   allowing for vertical scrolling if necessary */
+  @media (max-height: 800px),
+  (max-width: 768px) {
+    body {
+      height: auto;
+      min-height: 100vh;
+    }
   }
 </style>

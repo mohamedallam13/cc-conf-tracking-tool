@@ -2,15 +2,18 @@
 <!-- Components -->
 <? const Search = 'client/components/Search/Search' ?>
 <? const Loader = 'client/components/Loader/Loader' ?>
+<? const Modal = 'client/components/Modal/Modal' ?>
 
 <!-- CSS -->
 <? const indexCSS = 'client/pages/index-css' ?>
 <? const SearchCSS = 'client/components/Search/Search-css' ?>
 <? const LoaderCSS = 'client/components/Loader/Loader-css' ?>
+<? const ModalCSS = 'client/components/Modal/Modal-css' ?>
 
 <!-- Javascript -->
 <? const indexJS = 'client/pages/index-js' ?>
 <? const LoaderJS = 'client/components/Loader/Loader-js' ?>
+<? const ModalJS = 'client/components/Modal/Modal-js' ?>
 
 <!DOCTYPE html>
 <html>
@@ -18,10 +21,12 @@
 <head>
     <base target="_top">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?!= _I(indexCSS) ?>
     <?!= _I(SearchCSS) ?>
     <?!= _I(LoaderCSS) ?>
+    <?!= _I(ModalCSS) ?>
 
 </head>
 
@@ -32,10 +37,12 @@
     <!-- Confessions Feed -->
     <div class="app" id="app">
         <?!= _I(Search) ?>
+        <?!= _I(Modal) ?>
     </div>
 
     <?!= _I(indexJS) ?>
     <?!= _I(LoaderJS) ?>
+    <?!= _I(ModalJS) ?>
 </body>
 
 </html>

@@ -1,3 +1,226 @@
 <style>
+    .tracker-container {
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        width: 100%;
+        max-width: 600px;
+        /* Max width for the card */
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
+    .input-group {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 25px;
+    }
+
+    .input-group input {
+        padding: 12px;
+        margin-right: 10px;
+        border: 2px solid #dadee4;
+        /* Soft border color */
+        border-radius: 8px;
+        width: 60%;
+        /* Adjust the width as needed */
+        font-size: 16px;
+        /* Slightly larger font for better readability */
+    }
+
+    button {
+        padding: 12px 25px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+
+    #submitBtn {
+        background-color: #34c38f;
+        /* Softer blue for submit */
+        color: white;
+    }
+
+    #submitBtn:hover {
+        background-color: #2ca583;
+        /* Slightly darker on hover */
+    }
+
+    .action-btn {
+        margin: 10px 5px;
+        /* Spacing between buttons */
+        font-weight: bold;
+        /* Make text bold for better legibility */
+    }
+
+    .cancel-btn {
+        background-color: #f46a6a;
+        /* Soft red */
+        color: white;
+    }
+
+    .cancel-btn:hover {
+        background-color: #e63939;
+        /* Slightly darker on hover */
+    }
+
+    .reset-btn {
+        background-color: #ffbb44;
+        /* Soft yellow */
+        color: white;
+    }
+
+    .reset-btn:hover {
+        background-color: #ffab23;
+        /* Slightly darker on hover */
+    }
+
+    .status {
+        padding: 6px 12px;
+        border-radius: 8px;
+        color: white;
+        display: inline-block;
+        margin-bottom: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        /* Added for slightly bolder text */
+    }
+
+    .posted {
+        background-color: rgba(52, 195, 143, 0.5);
+        /* Increase the opacity for more intense color */
+    }
+
+    .rejected {
+        background-color: rgba(244, 106, 106, 0.5);
+        /* Increase the opacity for more intense color */
+    }
+
+    .pending {
+        background-color: rgba(255, 193, 7, 0.5);
+        /* Increase the opacity for more intense color */
+    }
+
+    .scheduled {
+        background-color: rgba(30, 136, 229, 0.5);
+        /* Softer blue with some transparency */
+    }
+
+    .date-badge {
+        background-color: #dee2e6;
+        color: #495057;
+        padding: 5px 10px;
+        border-radius: 12px;
+        display: inline-block;
+        margin-right: 5px;
+        /* Add spacing if multiple badges */
+        font-weight: 400;
+        margin-top: 5px;
+        /* Space from the above element */
+    }
+
+    .status .date-badge {
+        font-weight: 700;
+        /* Make date text bolder for statuses */
+    }
+
+    /* Apply the 'Roboto' font to buttons and statuses as well */
+    button,
+    .status {
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .highlight {
+        font-weight: bold;
+        color: #325d88;
+        /* Darker text for emphasis */
+        display: inline-block;
+        /* Ensures padding is applied correctly */
+    }
+
+    #resultsContainer {
+        text-align: center;
+        width: 100%;
+    }
+
+    #resultsContainer ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    #resultsContainer li {
+        background-color: #f6f8fa;
+        padding: 10px;
+        margin-bottom: 8px;
+        border-radius: 8px;
+        border-left: 3px solid #34c38f;
+        /* Color indicating an attempt */
+    }
+
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+
+        .input-group input,
+        .input-group button {
+            width: 100%;
+            /* Full width on smaller screens */
+            margin-top: 10px;
+            /* Add some space above */
+            margin-bottom: 10px;
+            /* Add some space below */
+        }
+
+        .input-group {
+            flex-direction: column;
+            /* Stack elements vertically */
+            align-items: center;
+            /* Center-align the flex items */
+        }
+
+        .tracker-container {
+            padding: 20px;
+            /* Consistent padding */
+            width: 90%;
+            /* Adjust width for smaller screens */
+            margin: auto;
+            /* Center the container */
+        }
+
+        .action-btn {
+            width: auto;
+            /* Prevent buttons from stretching */
+            margin: 10px 5px;
+            /* Space around buttons */
+        }
+
+        .status,
+        .highlight {
+            display: block;
+            /* Each status on its own line */
+            margin-bottom: 15px;
+            /* More space between lines */
+        }
+
+        #resultsContainer {
+            width: 100%;
+            /* Ensure container width is full */
+        }
+
+        #resultsContainer ul {
+            padding-left: 0;
+            /* Remove padding for the list on small screens */
+        }
+
+        #resultsContainer li {
+            margin-bottom: 8px;
+            /* Space between list items */
+        }
+    }
 </style>

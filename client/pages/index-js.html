@@ -1,15 +1,132 @@
 <script>
 
-    function fetchConfession() {
-        const id = document.getElementById('confessionId').value.trim();
-        const display = document.getElementById('confessionDisplay');
+    let trackingFile;
 
-        // Placeholder for your fetch logic
-        const confession = "Confession text based on ID " + id + "...";
-
-        display.style.display = 'block'; // Show the confession display area
-        display.textContent = confession; // Update the text
+    function loadTracking() {
+        // Assuming show() and hide() manage loading indicators
+        show();
+        google.script.run
+            .withSuccessHandler(setTrackingObj)
+            .withFailureHandler(handleError)
+            .loadTracking();
     }
+
+    function handleError(error) {
+        console.error('Error fetching data:', error);
+        hide();
+    }
+
+    function setTrackingObj(trackingFileObjString) {
+        trackingFile = JSON.parse(trackingFileObjString);
+        console.log(trackingFile);
+        hide();
+    }
+
+    document.getElementById('submitBtn').addEventListener('click', function () {
+        const refNum = document.getElementById('refNumInput').value.toUpperCase();
+        if (!/^[A-Z0-9]{8}$/.test(refNum)) {
+            alert("Invalid Ref Number. Please follow the format: 8 characters, uppercase letters and numbers only.");
+            return;
+        }
+        const serialNum = trackingFile.index[refNum];
+        if (!serialNum) {
+            document.getElementById('resultsContainer').textContent = 'No data found for this Ref Number.';
+            return;
+        }
+        const data = trackingFile.data[serialNum];
+        if (data) {
+            displayResults(data);
+        } else {
+            document.getElementById('resultsContainer').textContent = 'No submissions found for this Ref Number.';
+        }
+    });
+
+    function displayResults(serialNum, data) {
+        const container = document.getElementById('resultsContainer');
+        container.innerHTML = ''; // Clear previous results
+
+        if (!data) {
+            container.innerHTML = '<p>No data found.</p>';
+            return;
+        }
+
+        // Highlight the serial number
+        let contentHtml = `<p><strong>Serial Number:</strong> <span class="highlight">${serialNum}</span></p>`;
+
+        // Display the latest status with its timestamp and other details if available
+        const latestStatus = data.status[0];
+        contentHtml += `<div class="status ${latestStatus.status}">${latestStatus.status.toUpperCase()}</div>`;
+        contentHtml += `<p><span class="date-badge">${new Date(latestStatus.timestamp).toLocaleString()}</span></p>`;
+
+        if (latestStatus.status === 'rejected' && latestStatus.rejectionReasons) {
+            contentHtml += `<p><strong>Rejection Reason:</strong> ${latestStatus.rejectionReasons}</p>`;
+        }
+
+        // Display the link if the confession is posted
+        if (data.link && latestStatus.status === 'posted') {
+            contentHtml += `<p><a href="${data.link}" target="_blank">View Post</a></p>`;
+        }
+
+    // For each status, we create a date badge
+    data.status.forEach(status => {
+        let statusHtml = `<div class="status ${status.status}">${status.status.toUpperCase()} <span class="date-badge">${new Date(status.timestamp).toLocaleString()}</span></div>`;
+        if (status.status.toLowerCase() === 'rejected' && status.rejectionReasons) {
+            statusHtml += `<p>${status.rejectionReasons}</p>`;
+        }
+        container.innerHTML += statusHtml;
+    });
+
+        // Display all confessions and their submission timestamps
+        contentHtml += '<p><strong>Submission Attempts:</strong></p>';
+        contentHtml += '<ul>';
+        data.confessionsArray.forEach((confession) => {
+            contentHtml += `<li>${confession.confession} - <em>${new Date(confession.timestamp).toLocaleString()}</em></li>`;
+        });
+        contentHtml += '</ul>';
+
+        // Action buttons
+        contentHtml += `
+        <button onclick="cancelConfession('${serialNum}')" class="action-btn cancel-btn">Cancel My Confession</button>
+        <button onclick="resetStatus('${serialNum}')" class="action-btn reset-btn">Reset Status</button>
+    `;
+
+        container.innerHTML = contentHtml;
+    }
+
+    document.getElementById('submitBtn').addEventListener('click', function () {
+        const refNum = document.getElementById('refNumInput').value.toUpperCase();
+        if (!/^[A-Z0-9]{8}$/.test(refNum)) {
+            alert("Invalid Ref Number. Please follow the format: 8 characters, uppercase letters and numbers only.");
+            return;
+        }
+        const serialNum = trackingFile.index[refNum];
+        if (!serialNum) {
+            document.getElementById('resultsContainer').textContent = 'No data found for this Ref Number.';
+            return;
+        }
+        const data = trackingFile.data[serialNum.toString()];
+        // const data = trackingFile.data[serialNum];
+        if (data) {
+            displayResults(serialNum.toString(), data);
+        } else {
+            document.getElementById('resultsContainer').textContent = 'No submissions found for this Ref Number.'; // Updated to pass serialNum to the display function
+        }
+    });
+
+
+    // function cancelConfession() {
+    //     if (confirm("Are you sure you want to cancel your confession?")) {
+    //         console.log("Confession cancelled.");
+    //         // Perform cancellation logic here, potentially calling a backend function
+    //     }
+    // }
+
+    function resetStatus() {
+        console.log("Status reset.");
+        // Logic for resetting status goes here, similarly might need a call to the backend
+    }
+
+    window.onload = loadTracking;
 
 
 </script>

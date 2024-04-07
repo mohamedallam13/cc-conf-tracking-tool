@@ -1,0 +1,33 @@
+<script>
+    // When the user clicks the cancel button, open the modal 
+    function cancelConfession() {
+        document.getElementById('cancelModal').style.display = 'flex';
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    document.getElementsByClassName('close')[0].onclick = function () {
+        document.getElementById('cancelModal').style.display = 'none';
+    }
+
+    // When the user clicks "Yes, Cancel It", perform the cancel action
+    document.getElementById('confirmCancel').onclick = function () {
+        // Perform the cancel action here. Replace console.log with your function
+        console.log("Confession cancelled.");
+        document.getElementById('cancelModal').style.display = 'none';
+        // Add additional logic as needed
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        const modal = document.getElementById('cancelModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    // When the user clicks "No, Go Back", close the modal
+    document.getElementById('closeModal').onclick = function () {
+        document.getElementById('cancelModal').style.display = 'none';
+    }
+
+</script>
