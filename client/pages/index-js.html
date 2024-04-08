@@ -18,7 +18,7 @@
 
     function setTrackingObj(trackingFileObjString) {
         trackingFile = JSON.parse(trackingFileObjString);
-        console.log(trackingFile);
+        // console.log(trackingFile);
         hide();
     }
 
@@ -117,7 +117,7 @@
         Cancel My Confession
         </button>
         `;
-        if (latestStatus.status == "pending") contentHtml += `<button onclick="resetStatus('${serialNum}')" class="action-btn reset-btn">Reset Status</button>`
+        // if (latestStatus.status == "pending") contentHtml += `<button onclick="resetStatus('${serialNum}')" class="action-btn reset-btn">Reset Status</button>`
 
         container.innerHTML = contentHtml;
     }

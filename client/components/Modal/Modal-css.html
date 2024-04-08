@@ -65,4 +65,23 @@
         margin: 0 10px;
         /* Spacing between buttons */
     }
+
+    @media (max-width: 400px) {
+
+        /* Adjust modal content padding for smaller screens */
+        .modal-content {
+            padding: 20px;
+            /* Ensure there’s enough padding inside the modal */
+        }
+
+        /* Increase spacing between action buttons in the modal for smaller screens */
+        .modal-actions .action-btn {
+            display: block;
+            /* Stack buttons vertically */
+            width: auto;
+            /* Use auto width for buttons to fit content */
+            margin: 10px auto;
+            /* Increase margin to 10px and center buttons */
+        }
+    }
 </style>
