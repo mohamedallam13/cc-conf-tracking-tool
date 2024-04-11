@@ -23,7 +23,7 @@
     }
 
     document.getElementById('submitBtn').addEventListener('click', function () {
-        const refNum = document.getElementById('refNumInput').value.toUpperCase();
+        const refNum = document.getElementById('refNumInput').value.toUpperCase().trim();
         const errorMessage = document.getElementById('errorMessage');
         errorMessage.style.display = 'none';
         const container = document.getElementById('resultsContainer');
@@ -76,7 +76,9 @@
         let contentHtml = `<p><strong>Serial Number:</strong> <span class="highlight" id="serialNum">${serialNum}</span></p>`;
 
         // Display the latest status with its timestamp and other details if available
-        const latestStatus = data.status[0] || { status: "pending" };
+        let latestStatus = data.status[0] || { status: "pending" };
+        console.log(latestStatus)
+        if (latestStatus.status == "shadowed") latestStatus = data.status.filter(row=>row.status == "posted")[0] // Avoid Shadowed
         contentHtml += `<div class="status ${latestStatus.status}">${latestStatus.status.toUpperCase()}</div>`;
         if (latestStatus.timestamp) contentHtml += `<p><span class="date-badge">${new Date(latestStatus.timestamp).toLocaleString()}</span></p>`;
 
